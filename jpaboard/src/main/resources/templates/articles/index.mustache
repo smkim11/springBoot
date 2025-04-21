@@ -8,6 +8,10 @@
 </head>
 <body>
 	{{>layouts/header}}
+	
+	{{#msg}}
+		<div>{{msg}}</div>
+	{{/msg}}
 	<a href="/articles/new">New Article</a>
 	<table class="table">
 	    <thead>
@@ -15,7 +19,6 @@
 	        <th scope="col">Id</th>
 	        <th scope="col">Title</th>
 	        <th scope="col">Content</th>
-	        <th scope="col">Pw</th>
 	    </tr>
 	    </thead>
 	    <tbody>
@@ -24,7 +27,6 @@
 	            <th>{{id}}</th>
 	            <td><a href="/articles/show?id={{id}}">{{title}}</a></td>
 	            <td>{{content}}</td>
-	            <th>{{pw}}</th>
 	        </tr>
 	    {{/list}}
 	    </tbody>

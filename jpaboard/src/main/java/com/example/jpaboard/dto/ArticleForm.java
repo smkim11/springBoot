@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleForm {
+	private long id;
 	private String title;
 	private String content;
-	private String pw;
 	
 	// DTO -> Entity 타입으로 변환
 	public Article toEntity() {
 		Article entity = new Article();
+		entity.setId(this.id);
 		entity.setTitle(this.title);
 		entity.setContent(this.content);
-		entity.setPw(this.pw);
 		
 		return entity;
 	}
