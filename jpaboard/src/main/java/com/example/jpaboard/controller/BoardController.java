@@ -25,6 +25,7 @@ public class BoardController {
 	@Autowired
 	BoardRepository boardRepository;
 	
+	// 전체 리스트
 	@GetMapping("/board/boardList")
 	public String boardList(Model model
 							,@RequestParam(value="currentPage",defaultValue = "0") int currentPage
@@ -47,6 +48,7 @@ public class BoardController {
 		return "board/boardList";
 	}
 	
+	// 상세보기
 	@GetMapping("/board/boardOne")
 	public String boardOne(Model model ,@RequestParam int boardNo) {
 		Board list = boardRepository.findById(boardNo).orElse(null);
@@ -56,12 +58,14 @@ public class BoardController {
 		return "board/boardOne";
 	}
 	
+	// 추가 페이지 이동
 	@GetMapping("/board/addBoard")
 	public String addBoardForm() {
 			
 		return "board/addBoard";
 	}
 	
+	// 추가 실행
 	@PostMapping("/board/addBoard")
 	public String addBoardAction(BoardForm boardForm) {
 		Board entity = boardForm.toEntity();
@@ -71,6 +75,7 @@ public class BoardController {
 		return "redirect:/board/boardList";
 	}
 	
+	// 수정 페이지 이동
 	@GetMapping("/board/modifyBoard")
 	public String modifyBoardForm(Model model ,@RequestParam int boardNo) {
 		Board list = boardRepository.findById(boardNo).orElse(null);
@@ -80,6 +85,7 @@ public class BoardController {
 		return "board/modifyBoard";
 	}
 	
+	// 수정 실행
 	@PostMapping("/board/modifyBoard")
 	public String modifyBoardAction(BoardForm boardForm, @RequestParam int boardNo) {
 		Board entity = boardForm.toEntity();
@@ -89,6 +95,7 @@ public class BoardController {
 		return "redirect:/board/boardOne?boardNo="+boardNo;
 	}
 	
+	// 삭제
 	@GetMapping("/board/deleteBoard")
 	public String deleteBoard(@RequestParam int boardNo) {
 		boardRepository.deleteById(boardNo);
