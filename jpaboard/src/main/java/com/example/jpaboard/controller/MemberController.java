@@ -143,10 +143,10 @@ public class MemberController {
 	}
 	
 	@PostMapping("/member/removeMember")
-	public String removeMember(@RequestParam String memberPw, @RequestParam String memberId) {
+	public String removeMember(MemberForm memberForm) {
 		// 입력한 비밀번호 암호화
-		String encodingPw = SHA256Util.encoding(memberPw);
-		memberRepository.removeMember(memberId, encodingPw);
+		memberForm.setMemberPw(SHA256Util.encoding(memberForm.getMemberPw()));
+		memberRepository.removeMember(memberForm.getMemberId(), memberForm.getMemberPw());
 		return "redirect:/";
 	}
 }
