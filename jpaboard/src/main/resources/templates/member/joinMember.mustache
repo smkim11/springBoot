@@ -3,6 +3,14 @@
 <head>
  <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<style>
+	body{
+	text-align:center
+	}
+	table{
+	margin:auto;
+	}
+</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -13,7 +21,7 @@
 		<div>{{msg}}</div>
 	{{/msg}}
 	<form action ="/member/joinMember" method="post">
-	<table>
+	<table class="w-50 table table-bordered">
 		<tr>
 			<th>아이디</th>
 			<td><input type="text" name="memberId"></td>
