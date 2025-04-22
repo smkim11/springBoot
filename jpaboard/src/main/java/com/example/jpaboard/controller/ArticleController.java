@@ -1,5 +1,7 @@
 package com.example.jpaboard.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -54,6 +56,15 @@ public class ArticleController {
 		// redirect로 호출되면 +RedirectAttributes.addAttribute() 같이 포함
 		
 		return "articles/index"; // forward
+	}
+	
+	@GetMapping("/articles/sqlTest")
+	public String sqlTest(Model model) {
+		Map<String,Object> map = articleRepository.getMinMaxCount("a%");
+		log.debug(map.toString());
+		model.addAttribute("map",map);
+		
+		return "articles/sqlTest";
 	}
 	
 	@GetMapping("/articles/new") // servlet에서 -> doGet()
