@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>BOARD LIST</h1>
+	<table border="1">
+		<tr>
+			<th>NO</th>
+			<th>TITLE</th>
+		</tr>
+		{{#list}}
+			<tr>
+				<th>{{bno}}</th>
+				<th><a href="/boardOne?bno={{bno}}">{{title}}</a></th>
+			</tr>
+		{{/list}}
+	</table>
+</body>
+</html>

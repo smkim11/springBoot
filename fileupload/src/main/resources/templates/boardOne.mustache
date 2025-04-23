@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>BOARD ONE</h1>
+	<div>
+		{{boardMapping.bno}}<br>
+		{{boardMapping.title}}
+	</div>
+	
+	<div>
+		첨부파일<br>
+		{{#fileList}}
+			<a href="/upload/{{fname}}.{{fext}}" download="{{foriginname}}">{{foriginname}}</a>
+		{{/fileList}}
+	</div>
+</body>
+</html>
