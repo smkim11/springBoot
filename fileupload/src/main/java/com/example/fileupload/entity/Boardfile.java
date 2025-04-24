@@ -26,9 +26,12 @@ public class Boardfile {
 	private String fext;
 	@Column(name="fsize")
 	private long fsize;
+	@Column(name="bno")
+	private int bno;
 	
+	// 사용하지 않는 연관관계 주석처리
 	// 자식에서 부모로 단방향 관계설정 O
-	@ManyToOne // 관계설정(하나의 게시물에 여러개의 파일을 등록할 수 있다)
-	@JoinColumn(name="bno") // Fk
-	private Board board;
+	// @ManyToOne // 관계설정(하나의 게시물에 여러개의 파일을 등록할 수 있다)
+	// @JoinColumn(name="bno") // Fk
+	// private Board board;
 }

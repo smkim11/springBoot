@@ -41,12 +41,9 @@ public class BoardController {
 	@GetMapping("/boardOne")
 	public String boardOne(Model model, @RequestParam int bno) {
 		BoardMapping boardMapping = boardRepository.findByBno(bno);
-		
-		Board board = new Board();
-		board.setBno(boardMapping.getBno());
-		
+
 		log.debug(boardMapping.toString());
-		List<Boardfile> fileList = boardFileRepository.findByBoard(board);
+		List<Boardfile> fileList = boardFileRepository.findByBno(bno);
 		log.debug("size: "+fileList.size());
 		
 		model.addAttribute("boardMapping", boardMapping);
@@ -104,7 +101,7 @@ public class BoardController {
 				
 				// BoardFile도 변환하여 저장
 				Boardfile boardFile = new Boardfile();
-				boardFile.setBoard(board);
+				boardFile.setBno(board.getBno());
 				boardFile.setFname(saveName);
 				boardFile.setFtype(f.getContentType());
 				boardFile.setFext(ext);
