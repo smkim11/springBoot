@@ -168,8 +168,15 @@ public class BoardController {
 	@PostMapping("/deleteBoard")
 	public String deleteBoard(@RequestParam String pw, @RequestParam int bno) {
 		Board board = boardRepository.findById(bno);
+		List<Boardfile> list = boardFileRepository.findByBno(bno);
 		
 		if(pw.equals(board.getPw())) { // 게시글에 있는 파일 삭제 후 게시글 삭제
+			for(Boardfile bf : list) {
+				File file = new File("C:/project/upload/"+bf.getFname()+"."+bf.getFext());
+				if(file.exists()) {
+					file.delete();
+				}
+			}
 			boardFileRepository.deleteByBno(bno);
 			boardRepository.deleteById(bno);
 			
