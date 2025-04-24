@@ -41,6 +41,7 @@ public class BoardfileController {
 		return "redirect:/boardOne?bno="+bno;
 	}
 	
+	// 상세페이지에서 파일 추가
 	@GetMapping("/addFile")
 	public String addFile(Model model, @RequestParam int bno) {
 		
