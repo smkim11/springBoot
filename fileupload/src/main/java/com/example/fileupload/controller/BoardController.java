@@ -151,9 +151,15 @@ public class BoardController {
 	// 게시글 수정 실행
 	@PostMapping("/modifyBoard")
 	public String modifyBoard(BoardForm boardForm, @RequestParam int bno) {
+		Board board = boardRepository.findById(bno);
+		log.debug(board.getPw());
+		log.debug(boardForm.getPw());
+		if(boardForm.getPw().equals(board.getPw())) {
+			boardRepository.modifyBoard(boardForm.getTitle(), bno);
+			return "redirect:/boardOne?bno="+bno;
+		}
 		
-		boardRepository.modifyBoard(boardForm.getTitle(), bno);
-		return "redirect:/boardOne?bno="+bno;
+		return "redirect:/modifyBoard?bno="+bno;
 	}
 	
 	// 게시글 삭제 폼 이동
@@ -166,11 +172,11 @@ public class BoardController {
 	
 	// 게시글 삭제
 	@PostMapping("/deleteBoard")
-	public String deleteBoard(@RequestParam String pw, @RequestParam int bno) {
+	public String deleteBoard(BoardForm boardForm, @RequestParam int bno) {
 		Board board = boardRepository.findById(bno);
 		List<Boardfile> list = boardFileRepository.findByBno(bno);
 		
-		if(pw.equals(board.getPw())) { // 게시글에 있는 파일 삭제 후 게시글 삭제
+		if(boardForm.getPw().equals(board.getPw())) { // 게시글에 있는 파일 삭제 후 게시글 삭제
 			for(Boardfile bf : list) {
 				File file = new File("C:/project/upload/"+bf.getFname()+"."+bf.getFext());
 				if(file.exists()) {
