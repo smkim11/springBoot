@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +34,24 @@ public class BoardController {
 	BoardFileRepository boardFileRepository;
 	
 	@GetMapping({"/","/boardList"}) // 둘다 이동 가능
-	public String boardList(Model model) {
-		List<BoardMapping> list = boardRepository.findAllBy();
+	public String boardList(Model model
+							,@RequestParam(defaultValue = "0") int currentPage
+							,@RequestParam(defaultValue = "5") int rowPerPage
+							,@RequestParam(defaultValue = "") String word) {
+		// 페이징
+		// Sort
+		Sort sort = Sort.by("bno").descending();
+		// PageRequest
+		PageRequest pageable = PageRequest.of(currentPage, rowPerPage, sort);
+		// Page<BoardMapping>
+		Page<BoardMapping> list = boardRepository.findByTitleContains(pageable, word);
 		
-		model.addAttribute("list", list);
+		model.addAttribute("list", list);	
+		model.addAttribute("prePage", list.getNumber()-1);
+		model.addAttribute("nextPage", list.getNumber()+1);
+		model.addAttribute("lastPage", list.getTotalPages());
+		model.addAttribute("isFirst", list.isFirst());
+		model.addAttribute("hasNext", list.hasNext());
 		return "boardList";
 	}
 	
@@ -78,6 +95,15 @@ public class BoardController {
 		log.debug("첫번째 파일 사이즈: "+firstFileSize);
 		
 		if(firstFileSize>0) { // 첫번째 파일 사이즈가 0이상이다 == 첨부된 파일이 있다
+			
+			// 업로드 하면 안되는 파일이 있거나 파일크기가 10MB 이상이면 저장 X
+			for(MultipartFile f : list) {
+				if(f.getContentType().equals("application/octet-stream") || f.getSize()>1024*1024*10) { // 10MB
+					return "redirect:/addBoard";
+				}
+			}
+			
+			// 파일 업로드 
 			for(MultipartFile f : list) {
 				log.debug("파일 타입: "+f.getContentType()); 
 				log.debug("파일원본 이름: "+f.getOriginalFilename()); 
@@ -86,10 +112,10 @@ public class BoardController {
 				String ext = f.getOriginalFilename().substring(f.getOriginalFilename().lastIndexOf(".")+1);
 				log.debug("확장자: "+ ext);
 				// 저장될 파일이름 
-				String saveName = UUID.randomUUID().toString().replace("-", "");
-				log.debug("저장파일이름: "+ saveName);
+				String fname = UUID.randomUUID().toString().replace("-", "");
+				log.debug("저장파일이름: "+ fname);
 				
-				File emptyFile = new File("C:/project/upload/"+saveName+"."+ext);
+				File emptyFile = new File("C:/project/upload/"+fname+"."+ext);
 				// f의 byte를 emptyFile 복사
 				
 				try {
@@ -102,7 +128,7 @@ public class BoardController {
 				// BoardFile도 변환하여 저장
 				Boardfile boardFile = new Boardfile();
 				boardFile.setBno(board.getBno());
-				boardFile.setFname(saveName);
+				boardFile.setFname(fname);
 				boardFile.setFtype(f.getContentType());
 				boardFile.setFext(ext);
 				boardFile.setForiginname(f.getOriginalFilename());
@@ -112,4 +138,45 @@ public class BoardController {
 		}
 		return "redirect:/";
 	}
+	
+	// 게시글 수정페이지 이동
+	@GetMapping("/modifyBoard")
+	public String modifyBoard(Model model,@RequestParam int bno) {
+		BoardMapping boardMapping = boardRepository.findByBno(bno);
+		
+		model.addAttribute("boardMapping", boardMapping);
+		return "modifyBoard";
+	}
+	
+	// 게시글 수정 실행
+	@PostMapping("/modifyBoard")
+	public String modifyBoard(BoardForm boardForm, @RequestParam int bno) {
+		
+		boardRepository.modifyBoard(boardForm.getTitle(), bno);
+		return "redirect:/boardOne?bno="+bno;
+	}
+	
+	// 게시글 삭제 폼 이동
+	@GetMapping("/deleteBoard")
+	public String deleteBoard(Model model,@RequestParam int bno) {
+		
+		model.addAttribute("bno", bno);
+		return "deleteBoard";
+	}
+	
+	// 게시글 삭제
+	@PostMapping("/deleteBoard")
+	public String deleteBoard(@RequestParam String pw, @RequestParam int bno) {
+		Board board = boardRepository.findById(bno);
+		
+		if(pw.equals(board.getPw())) { // 게시글에 있는 파일 삭제 후 게시글 삭제
+			boardFileRepository.deleteByBno(bno);
+			boardRepository.deleteById(bno);
+			
+			return "redirect:/";
+		}
+		
+		return "redirect:/deleteBoard?bno="+bno;
+	}
+	
 }

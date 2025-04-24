@@ -15,23 +15,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>ADD BOARD</h1>
-	<form method="post" action="/addBoard" enctype="multipart/form-data">
+	<h1>수정</h1>
+	<form method="post" action="/modifyBoard">
 		<table class="w-50 table table-bordered">
 			<tr>
-				<th>TITLE</th>
-				<td><input type="text" name="title"></td>
+				<th>번호</th>
+				<td><input type="text" name="bno" value={{boardMapping.bno}} readonly></td>
 			</tr>
 			<tr>
-				<th>PW</th>
-				<td><input type="password" name="pw"></td>
-			</tr>
-			<tr>
-				<th>FILE</th>
-				<td><input type="file" name="fileList" multiple></td> <!-- 여러파일 선택 -->
+				<th>제목</th>
+				<td><input type="text" name="title" value={{boardMapping.title}}></td>
 			</tr>
 		</table>
-		<button>저장</button>
+		<button>수정</button>
 	</form>
 </body>
 </html>
