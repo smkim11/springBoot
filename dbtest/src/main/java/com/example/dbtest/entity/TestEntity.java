@@ -16,4 +16,5 @@ public class TestEntity { // -> DTO 역할
 	
 	@Column(name="id")
 	private String id;
+	
 }
