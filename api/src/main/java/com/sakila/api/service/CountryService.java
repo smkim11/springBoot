@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.sakila.api.dto.CountryDto;
 import com.sakila.api.entity.CountryEntity;
+import com.sakila.api.repository.CityRepository;
 import com.sakila.api.repository.CountryRepository;
 
 @Service
@@ -14,10 +15,33 @@ import com.sakila.api.repository.CountryRepository;
 
 public class CountryService {
 	private CountryRepository countryRepository;
+	private CityRepository cityRepository;
 	
 	// 필드주입대신 생성자 주입 Autowired 생략가능
-	public CountryService(CountryRepository countryRepository) {
+	public CountryService(CountryRepository countryRepository, CityRepository cityRepository) {
 		this.countryRepository = countryRepository;
+		this.cityRepository = cityRepository;
+	}
+	
+	// 삭제
+	public boolean delete(int countryId) {
+		// 자식테이블에 외래키로 참조하는 행이 있는지 검사
+		CountryEntity countryEntity = countryRepository.findById(countryId).orElse(null);
+		
+		// 자식테이블에 외래키로 참조하는 행이 있다면
+		if(cityRepository.countByCountryEntity(countryEntity) != 0) {
+			System.out.println("자식테이블에 외래키로 참조하는 행이 있습니다.");
+			return false;
+		}
+		// 자식테이블에 참조하는 행이 없다면(select count(*) from city where country_id=countryId)
+		countryRepository.deleteById(countryId);
+		return true;
+	}
+	
+	// 수정
+	public void update(CountryDto countryDto) {
+		CountryEntity updateCountryEntity = countryRepository.findById(countryDto.getCountryId()).orElse(null);
+		updateCountryEntity.setCountry(countryDto.getCountry());
 	}
 	
 	// CountryEntity 입력
