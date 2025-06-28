@@ -52,6 +52,10 @@ public class CityService {
 		CityEntity saveCityEntity = new CityEntity();
 		saveCityEntity.setCity(cityDto.getCity());
 		
+		/* CityDto에서 변환하여 호출
+		CityEntity entity = cityDto.toEntity();
+		*/
+		
 		// CountryEntity에서 countryId구해서 입력
 		CountryEntity countryEntity = countryRepository.findById(cityDto.getCountryId()).orElse(null);
 		saveCityEntity.setCountryEntity(countryEntity);
