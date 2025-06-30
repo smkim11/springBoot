@@ -1,9 +1,12 @@
 package com.sakila.api.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +20,7 @@ import com.sakila.api.entity.CustomerEntity;
 import com.sakila.api.service.CustomerService;
 
 @RestController
+@CrossOrigin
 public class CustomerController {
 	private CustomerService customerService;
 	
@@ -38,22 +42,28 @@ public class CustomerController {
 	
 	// 입력
 	@PostMapping("/addCustomer")
-	public ResponseEntity<String> addCustomer(@RequestBody CustomerDto customerDto){
+	public ResponseEntity<Map<String,String>> addCustomer(@RequestBody CustomerDto customerDto){
 		customerService.save(customerDto);
-		return new ResponseEntity<String>("입력 성공",HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","입력 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 수정
 	@PatchMapping("/updateCustomer")
-	public ResponseEntity<String> updateCustomer(@RequestBody CustomerDto customerDto){
+	public ResponseEntity<Map<String,String>> updateCustomer(@RequestBody CustomerDto customerDto){
 		customerService.update(customerDto);
-		return new ResponseEntity<String>("수정 성공",HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","수정 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 삭제
 	@DeleteMapping("/deleteCustomer/{customerId}")
-	public ResponseEntity<String> deleteCustomer(@PathVariable int customerId){
+	public ResponseEntity<Map<String,String>> deleteCustomer(@PathVariable int customerId){
 		customerService.delete(customerId);
-		return new ResponseEntity<String>("삭제 성공",HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","삭제성공");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 	}
 }

@@ -1,9 +1,12 @@
 package com.sakila.api.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +20,7 @@ import com.sakila.api.entity.AddressEntity;
 import com.sakila.api.service.AddressService;
 
 @RestController
+@CrossOrigin
 public class AddressController {
 	private AddressService addressService;
 	
@@ -38,26 +42,33 @@ public class AddressController {
 	}
 	
 	// 입력
-	@PostMapping("/address")
-	public ResponseEntity<String> address(@RequestBody AddressDto addressDto){
+	@PostMapping("/addAddress")
+	public ResponseEntity<Map<String,String>> addAddress(@RequestBody AddressDto addressDto){
 		addressService.save(addressDto);
-		return new ResponseEntity<String>("입력성공",HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","입력 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 수정
-	@PatchMapping("/address")
-	public ResponseEntity<String> updateAddress(@RequestBody AddressDto addressDto){
+	@PatchMapping("/updateAddress")
+	public ResponseEntity<Map<String,String>> updateAddress(@RequestBody AddressDto addressDto){
 		
 		addressService.update(addressDto);
-		return new ResponseEntity<String>("수정성공",HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","수정 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 삭제
-	@DeleteMapping("/address/{addressId}")
-	public ResponseEntity<String> deleteAddress(@PathVariable int addressId){
+	@DeleteMapping("/deleteAddress/{addressId}")
+	public ResponseEntity<Map<String,String>> deleteAddress(@PathVariable int addressId){
+		Map<String,String> resultMap = new HashMap<String,String>();
 		if(addressService.delete(addressId)) {
-			return new ResponseEntity<String>("삭제성공",HttpStatus.OK);
+			resultMap.put("result","삭제성공");
+			return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("삭제실패",HttpStatus.INTERNAL_SERVER_ERROR);
+		resultMap.put("result","삭제실패");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

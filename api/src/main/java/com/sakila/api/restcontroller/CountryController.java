@@ -1,9 +1,12 @@
 package com.sakila.api.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,6 +20,7 @@ import com.sakila.api.entity.CountryEntity;
 import com.sakila.api.service.CountryService;
 
 @RestController
+@CrossOrigin
 public class CountryController {
 	private CountryService countryService;
 	
@@ -38,8 +42,8 @@ public class CountryController {
 	}
 	
 	// 저장
-	@PostMapping("/country")
-	public ResponseEntity<String> country(@RequestBody CountryDto countryDto){
+	@PostMapping("/addCountry")
+	public ResponseEntity<Map<String,String>> addCountry(@RequestBody CountryDto countryDto){
 		// @RequestBody json형태의 문자열 매개값을 CountryDto타입으로 변환시킨다.
 		
 		/*
@@ -48,25 +52,32 @@ public class CountryController {
 		*/
 		
 		countryService.save(countryDto);
-		return new ResponseEntity<String>("입력성공", HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","입력 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 	}
 	
 	// 수정
-	@PatchMapping("/country")
-	public ResponseEntity<String> updateCountry(@RequestBody CountryDto countryDto){
+	@PatchMapping("/updateCountry")
+	public ResponseEntity<Map<String,String>> updateCountry(@RequestBody CountryDto countryDto){
 		countryService.update(countryDto);
-		return new ResponseEntity<String>("수정성공", HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","수정 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 	}
 		
 	// 삭제
-	@DeleteMapping("/country/{countryId}")
-	public ResponseEntity<String> deleteCountry(@PathVariable int countryId){
+	@DeleteMapping("/deleteCountry/{countryId}")
+	public ResponseEntity<Map<String,String>> deleteCountry(@PathVariable int countryId){
 		boolean result = countryService.delete(countryId); 
+		Map<String,String> resultMap = new HashMap<String,String>();
 		
 		if(result) {
-			return new ResponseEntity<String>("삭제성공", HttpStatus.OK);
+			resultMap.put("result","삭제성공");
+			return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("삭제실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		resultMap.put("result","삭제실패");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 }

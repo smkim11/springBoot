@@ -1,9 +1,12 @@
 package com.sakila.api.restcontroller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +21,7 @@ import com.sakila.api.entity.StoreEntity;
 import com.sakila.api.service.StoreService;
 
 @RestController
+@CrossOrigin
 public class StoreController {
 	private StoreService storeService;
 	
@@ -39,25 +43,32 @@ public class StoreController {
 	
 	// 입력
 	@PostMapping("/addStore")
-	public ResponseEntity<String> addStore(@RequestBody StoreDto storeDto){
+	public ResponseEntity<Map<String,String>> addStore(@RequestBody StoreDto storeDto){
 		storeService.save(storeDto);
-		return new ResponseEntity<String>("추가 성공", HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","추가 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 수정
 	@PatchMapping("/updateStore")
-	public ResponseEntity<String> updateStore(@RequestBody StoreDto storeDto){
+	public ResponseEntity<Map<String,String>> updateStore(@RequestBody StoreDto storeDto){
 		storeService.update(storeDto);
 		
-		return new ResponseEntity<String>("수정 성공", HttpStatus.OK);
+		Map<String,String> resultMap = new HashMap<String,String>();
+		resultMap.put("result","수정 성공");
+		return new ResponseEntity<Map<String,String>>(resultMap,HttpStatus.OK);
 	}
 	
 	// 삭제
 	@DeleteMapping("/deleteStore/{storeId}")
-	public ResponseEntity<String> deleteStore(@PathVariable int storeId){
+	public ResponseEntity<Map<String,String>> deleteStore(@PathVariable int storeId){
+		Map<String,String> resultMap = new HashMap<String,String>();
 		if(storeService.delete(storeId)) {
-			return new ResponseEntity<String>("삭제 성공", HttpStatus.OK);
+			resultMap.put("result","삭제성공");
+			return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.OK);
 		}
-		return new ResponseEntity<String>("삭제 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+		resultMap.put("result","삭제실패");
+		return new ResponseEntity<Map<String,String>>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }
