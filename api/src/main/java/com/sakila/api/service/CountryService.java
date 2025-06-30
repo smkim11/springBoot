@@ -23,6 +23,16 @@ public class CountryService {
 		this.cityRepository = cityRepository;
 	}
 	
+	// 한 행 조회
+	public CountryEntity findById(int countryId) {
+		return countryRepository.findById(countryId).orElse(null);
+	}
+	
+	// 전체 조회
+	public List<CountryEntity> findAll(){
+		return countryRepository.findAll();
+	}
+		
 	// 삭제
 	public boolean delete(int countryId) {
 		// 자식테이블에 외래키로 참조하는 행이 있는지 검사
@@ -51,11 +61,6 @@ public class CountryService {
 		saveCountryEntity.setCountry(countryDto.getCountry());
 		
 		countryRepository.save(saveCountryEntity);
-	}
-	
-	// 전체 조회
-	public List<CountryEntity> findAll(){
-		return countryRepository.findAll();
 	}
 	
 }

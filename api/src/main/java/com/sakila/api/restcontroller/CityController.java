@@ -26,6 +26,13 @@ public class CityController {
 		this.cityService = cityService;
 	}
 	
+	// 한 행 조회
+	@GetMapping("/cityOne/{cityId}")
+	public ResponseEntity<CityEntity> cityOne(@PathVariable int cityId){
+		return new ResponseEntity<CityEntity>(cityService.findById(cityId),HttpStatus.OK);
+	}
+	
+	// 조회
 	@GetMapping("/city")
 	public ResponseEntity<List<CityEntity>> city(){
 		return new ResponseEntity<List<CityEntity>>(cityService.findAll(), HttpStatus.OK);

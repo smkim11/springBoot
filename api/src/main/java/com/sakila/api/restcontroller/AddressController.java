@@ -25,6 +25,12 @@ public class AddressController {
 		this.addressService = addressService;
 	}
 	
+	// 한 행 조회
+	@GetMapping("/addressOne/{addressId}")
+	public ResponseEntity<AddressEntity> addressOne(@PathVariable int addressId){
+		return new ResponseEntity<AddressEntity>(addressService.findById(addressId), HttpStatus.OK);
+	}
+	
 	// 조회
 	@GetMapping("/address")
 	public ResponseEntity<List<AddressEntity>> address(){

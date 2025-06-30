@@ -26,6 +26,11 @@ public class AddressService {
 		this.customerRepository = customerRepository;
 	}
 	
+	// 한 행 조회
+	public AddressEntity findById(int addressId) {
+		return addressRepository.findById(addressId).orElse(null);
+	}
+	
 	// 조회
 	public List<AddressEntity> findAll(){
 		return addressRepository.findAll();
