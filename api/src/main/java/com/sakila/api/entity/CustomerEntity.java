@@ -25,9 +25,6 @@ public class CustomerEntity {
 	@Column(name = "customer_id")
 	private int customerId;
 	
-	@Column(name = "store_id")
-	private int storeId;
-	
 	@Column(name = "first_name")
 	private String firstName;
 	
@@ -40,13 +37,17 @@ public class CustomerEntity {
 	@Column(name = "active")
 	private int active;
 	
-	@Column(name = "create_date")
+	@Column(name = "create_date", nullable = true)
 	@CurrentTimestamp // 현재시간 자동입력
 	private Timestamp createDate;
 	
-	@Column(name = "last_update")
+	@Column(name = "last_update", nullable = true)
 	@CurrentTimestamp // 현재시간 자동입력
 	private Timestamp lastUpdate;
+	
+	@ManyToOne
+	@JoinColumn(name = "store_id")
+	private StoreEntity storeEntity;
 	
 	@ManyToOne 
 	@JoinColumn(name = "address_id") // 단방향(customer에서 address) countryEntity->cityEntity->addressEntity->customerEntity
