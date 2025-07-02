@@ -1,12 +1,14 @@
 package com.sakila.api.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sakila.api.dto.AddressDto;
 import com.sakila.api.entity.AddressEntity;
+import com.sakila.api.entity.AddressMapping;
 import com.sakila.api.entity.CityEntity;
 import com.sakila.api.repository.AddressRepository;
 import com.sakila.api.repository.CityRepository;
@@ -32,8 +34,13 @@ public class AddressService {
 	}
 	
 	// 조회
-	public List<AddressEntity> findAll(){
-		return addressRepository.findAll();
+	public Page<AddressMapping> findAll(int currentPage){
+		int pageSize = 10;
+		int pageNum = currentPage-1;
+		Sort sort = Sort.by("addressId").ascending();
+		
+		PageRequest pageable = PageRequest.of(pageNum, pageSize, sort);
+		return addressRepository.findAllBy(pageable);
 	}
 	
 	// 생성
