@@ -69,7 +69,7 @@ public class CityService {
 	public Page<CityMapping> findAll(int currentPage){
 		int pageSize = 10;
 		int pageNum = currentPage -1;
-		Sort sort = Sort.by("cityId").ascending();
+		Sort sort = Sort.by("cityId").descending();
 		
 		PageRequest pageable = PageRequest.of(pageNum, pageSize, sort);
 		return cityRepository.findAllBy(pageable);
