@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: aopex
+server:
+  port: 80
